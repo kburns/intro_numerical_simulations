@@ -1,0 +1,55 @@
+\documentclass[letterpaper, 12pt, notitlepage, oneside]{report}
+
+% Imports
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{graphicx}
+%\usepackage{wrapfig}
+\usepackage{subfiles}
+%\usepackage{xfrac} % conflicts with newtx
+\usepackage{pythonhighlight}
+
+% Layout
+\usepackage[top=1.25in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
+\usepackage[onehalfspacing]{setspace}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+\usepackage{enumitem}
+\setlist{listparindent=\parindent}
+\setlist{parsep=0em}
+
+% Headers
+%\usepackage{fancyhdr} 
+%\pagestyle{fancy}
+%\fancyhead[L,R]{}
+%\fancyhead[C]{\nouppercase \rightmark}
+%\renewcommand{\headrulewidth}{0pt}
+
+% Section font
+\usepackage{sectsty}
+\allsectionsfont{\large \sffamily \bfseries} 
+
+% Body font
+\usepackage[colorlinks, allcolors=blue]{hyperref}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{inconsolata}
+
+% Custom commands
+\input{commands}
+
+% Image path
+\graphicspath{{.}}
+
+% Document
+\begin{document}
+
+\subfile{part_0}
+{\sffamily \tableofcontents}
+\subfile{part_1}
+\subfile{part_2}
+\subfile{part_3}
+
+\end{document}
+

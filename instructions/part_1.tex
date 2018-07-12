@@ -1,0 +1,187 @@
+\documentclass[main.tex]{subfiles}
+
+% Document
+\begin{document}
+
+\chapter{How to build a numerical simulation}
+
+\section{Introduction}
+
+Many areas of science and engineering involve modeling systems with differential equations, or equations that describe how some physical quantities change over time and/or space.
+One of the most important examples is the equation of motion of an object moving under applied forces, given by Newton's laws.
+
+A differential equation can tell us how a system generally behaves (for example, if we toss a ball we know it is pulled down by gravity), but to predict exactly what a particular system will do (what path the ball will take and when it will land), we need to solve the differential equation for a particular set of initial conditions (where we throw the ball from, how fast we throw it, etc.).
+
+For some systems, these equations are simple enough to solve analytically, but once the forces become more complicated, or the systems we're studying become larger, this usually becomes impossible, even for the best mathematicians in the world!
+Instead, if we still want to get a solution to predict what will happen, we need to use computers to numerically compute solutions.
+
+In nearly all areas of science and engineering, there are mathematicians working to develop the fastest and most accurate numerical algorithms for solving the problems they care about.
+In this project, we'll learn about some of the most common algorithms used for solving differential equations.
+We'll program the methods ourselves, examine their accuracy and speed, and use them to compute solutions to a wide range of physics problems.
+
+One of the main goals of this project is to emphasize the flexibility of the methods we'll be using.
+In particular, if there's a different problem you're interested in simulating, or twists to the proposed problems that you can think of, be sure to bring it up!
+If we can figure out the equations to use, we can give them a shot on the computer, and see what happens!
+
+\section{Getting started with Python}
+
+Writing simulations requires some basic programming skills.
+For this project, we'll be using the Python language.
+Python is a flexible, open-source, and easy-to-use language.
+Although it wasn't originally designed for scientific or numerical computing, it has become very popular in many scientific fields like data-science and astronomy.
+If you haven't used Python before, or just need a refresher, it's a good idea to start with an online tutorial.
+
+Task 1:
+Complete the ``Learn the Basics'' pages of the tutorial at \url{https://www.learnpython.org}.
+Make sure you're comfortable with lists, loops, conditions, and functions, since we'll need them later!
+
+While Python is a great language, it can sometimes be a little slow compared to languages that are designed for numerical work, as opposed to more general programming.
+If our programs aren't running fast enough, we'll likely start using ``array'' objects from the ``numpy'' package, which can be faster than Python lists when dealing with large sets of numbers.
+
+Task 2:
+Complete the ``Numpy Arrays'' page under ``Data Science Tutorials'' at \url{https://www.learnpython.org}.
+
+To run your own simulations, you'll need Python 3 along with the numpy and matplotlib packages installed on your computer.
+If you haven't used Python before, chat with a TA about getting it installed.
+\section{Solving differential equations in time}
+
+\subsection{Formulating an initial value problem}
+
+We'll be dealing primarily with equations of motion, which are differential equations in time.
+The standard notation for a problem like this is
+
+\begin{equation}
+    \dot{u}(t)=f(u(t), t)
+\end{equation}
+
+Here $u(t)$ is the unknown quantity which changes over time.
+This could be anything like the position of a planet, the weight of a rocket as it burns its fuel, or the angle of an opening door.
+The differential equations tells us that the time-derivative of $u(t)$, written as $\dot{u}(t)$, is some function which depends on the current value $u(t)$ and the time $t$.
+Our goal is to find a solution $u(t)$ that satisfies this equation, and also has some prescribed initial value a at the starting point of the simulation, which we'll usually take to occur at $t=0$:
+
+\begin{equation}
+    u(0)=a
+\end{equation}
+
+\subsection{Systems of equations}
+
+In many cases, we'll need to find solutions for multiple unknown quantities at the same time.
+In this case, we'll write the above as a system of equations, where we stack all the unknowns together into the vector $U = [u_0, u_1, u_2, ...]$, and similarly stack together the functions describing how each component changes, and the initial conditions for each component:
+
+\begin{equation}
+    \dot{U}(t) = F(U(t), t)
+\end{equation}
+%
+\begin{equation}
+    U(0) = A
+\end{equation}
+
+The problems we'll be looking at will usually come from Newton's laws, which describe the second derivative (acceleration) of the position of an object in time.
+To fit such an equation into the form above, we'll construct a system of equations for the position and velocity of the object: the derivative of the position of an object is its velocity ($\dot{x} = v$), and the derivative of the velocity of an object is its acceleration ($\dot{v} = a$) which will be given by Newton's laws.
+We'll need to specify both the initial position $x(0)$ and initial velocity $v(0)$ to solve for the object's motion.
+
+\subsection{Discretizing in time}
+
+The fundamental approach we use to find a numerical solution to an initial value problem is to approximately solve the equations by taking short jumps in time, starting from the initial conditions.
+Our numerical solution will thus consist of a discrete set of values, which we hope are a good approximation of the true, but unknown, continuous solution:
+
+\begin{equation}
+    U_n \approx U(t = n h)
+\end{equation}
+
+Here $U_n$ denotes our numerical solution at the $n$-th timestep, corresponding to $t = t_n = n h$, and $h$ denotes the step-size.
+We typically expect that as $h$ decreases, i.e. we take smaller and smaller steps, our numerical solution will become more accurate.
+However, the smaller steps we take, the longer it will take to compute the solution at a given time $T$.
+This is an important trade-off, and we'll need to carefully determine how small of a step we need to get accurate solutions for different problems, while still performing the computation fast enough.
+
+The integrator is the part of the algorithm that actually performs an individual timestep, i.e. computes $U_{n+1}$ from $U_n$ and the function $F$.
+We're going to compare different integrators later on, but for now let's not worry about those details, and instead write a general function that timesteps an initial value problem to a specified time.
+
+Task 3:
+Write a Python function that timesteps a general initial value problem.
+
+The function should accept the following arguments:
+\begin{itemize}
+    \item The initial-value vector $A$
+    \item The time-derivative function $F(U_n, t_n)$
+    \item The integrator function $P(F, U_n, t_n, h)$
+    \item The ending time for the simulation $T$
+    \item The step-size $h$
+\end{itemize}
+
+The function should return the following:
+\begin{itemize}
+    \item A 1D array of times for the discrete solutions
+    \item A 2D array of the discrete solutions at each timestep
+\end{itemize}
+
+Hints:
+\begin{itemize}
+    \item How many steps will we need to take?  What Python structure should we use for this?
+    \item The outputs can be constructed by repeatedly appending to a list, but preallocating numpy arrays should be faster.
+    \item Ask for help if you get stuck!  This is a big step!
+\end{itemize}
+
+\section{Integration methods}
+
+\subsection{Euler method}
+
+Now that we have a timestepping function, we need an integrator to use inside of it.
+The simplest integrator is called the Euler method, and was first used by Leonhard Euler way back in the 1760's!
+The method is very simple: it simply says that to compute the next discrete solution, extrapolate from the current solution using the current value of the derivative.
+Mathematically, that looks like this:
+
+\begin{equation}
+    U_{n+1} = U_n + h F(U_n, t_n)
+\end{equation}
+
+A real-world example: if I'm currently moving 60 mph on the highway, then in one minute I should be about one mile further down the road.
+This integration is exact if my speed stays constant, but it is just an approximate guess which may not be quite right if my speed changes.
+If I'm not sure what the traffic ahead looks like, then the further into the future I try to predict my position, the less accurate I'm likely to be.
+
+Task 4:
+Write a Python function that performs a single timestep using the Euler method.
+The function should match the interface we defined above in Task 3.
+
+\subsection{Midpoint method}
+
+More advanced methods try to achieve higher accuracy by using the derivative calculated at an intermediate stage between timesteps.
+The midpoint method takes half of a timestep using the initial derivative, then goes back and does the full timestep using the derivative at the midpoint.
+Mathematically, it looks like this:
+
+\begin{equation}
+    V = U_n + \frac{h}{2} F(U_n, t_n)
+\end{equation}
+%
+\begin{equation}
+    U_{n+1} = U_n + h F\left(V, t_n + \frac{h}{2}\right)
+\end{equation}
+
+Task 5:
+Write a Python function that performs a single timestep using the midpoint method.
+The function should match the interface we defined above in Task 3.
+
+\subsection{Runge Kutta method}
+
+The Runge Kutta method extends the strategy of the midpoint method from two to four stages.
+It uses three intermediate stages to produce an estimate of the average derivative during the timestep, and uses this average to advance the solution.
+Mathematically, it looks like this:
+
+\begin{align}
+    K_1 &= F(U_n, t_n) \\
+    K_2 &= F(U_n + \frac{h}{2} K_1, t_n + \frac{h}{2}) \\
+    K_3 &= F(U_n + \frac{h}{2} K_2, t_n + \frac{h}{2}) \\
+    K_4 &= F(U_n + h K_3, t_n + h) \\
+    U_{n+1} &= U_n + \frac{h}{6} (K_1 + 2 K_2 + 2 K_3 + K_4) \\
+\end{align}
+
+Task 6 (Optional):
+If you have time, write a Python function that performs a timestep using the Runge Kutta method.
+The function should match the interface we defined above in Task 3.
+
+\section{Conclusion}
+
+With the timestepping and integrator functions complete, we now have all the tools we need to start our simulations.
+In the next part, we'll start applying these methods to problems with known solutions to compare the different integrators and to get a feel for how to run accurate simulations.
+
+\end{document}

@@ -1,0 +1,37 @@
+
+% Math definitions
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\mathrm{ceil}\left(#1\right)}
+\newcommand{\modulo}[2]{#1 \, \mathrm{mod} \, #2}
+\newcommand{\sgn}{\mathrm{sgn}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\uvec}[1]{\vec{e}_{#1}}
+\newcommand{\units}[1]{\; \mathrm{#1}}
+\renewcommand{\deg}{\circ}
+\newcommand{\tens}[1]{\vec{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\sfrac}[2]{#1/#2}
+
+% Calculus
+\newcommand{\diff}[1]{\mathrm{d} #1}
+\newcommand{\pdiff}[1]{\partial_{#1}}
+\newcommand{\sderiv}[2]{\diff_{#2} #1}
+\newcommand{\deriv}[2]{\frac{\diff{} #1}{\diff{} #2}}
+\newcommand{\spderiv}[2]{\pdiff{#2} #1}
+\newcommand{\pderiv}[2]{\frac{\pdiff{} #1}{\pdiff{} #2}}
+\newcommand{\npderiv}[3]{\frac{\pdiff{}^{#3} #1}{\pdiff{} #2^{#3}}}
+\newcommand{\grad}[1]{\nabla #1}
+\newcommand{\dive}[1]{\nabla \cdot #1}
+\newcommand{\curl}[1]{\nabla \times #1}
+\newcommand{\lap}[1]{\nabla^2 #1}
+
+% References
+\renewcommand{\eqref}[1]{Eq.~(\ref{#1})}
+\newcommand{\secref}[1]{\S\ref{#1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\aside}[1]{\begin{quotation}\noindent\emph{#1}\end{quotation}}
+
+% Misc
+\newcommand{\chref}[2]{\href{#1}{#2}\footnote{\url{#1}}}
