@@ -5,9 +5,8 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{graphicx}
-%\usepackage{wrapfig}
+\usepackage{wrapfig}
 \usepackage{subfiles}
-%\usepackage{xfrac} % conflicts with newtx
 \usepackage{pythonhighlight}
 
 % Layout
@@ -16,7 +15,6 @@
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
 \usepackage{enumitem}
-\setlist{listparindent=\parindent}
 \setlist{parsep=0em}
 
 % Headers
@@ -45,8 +43,19 @@
 % Document
 \begin{document}
 
+\title{\sffamily \bfseries Introduction to Numerical Simulations}
+\author{}
+\date{}
+\maketitle
+
+\renewcommand{\abstractname}{\sffamily \bfseries \large Project Description}
 \subfile{part_0}
+
+\begin{singlespace}
+\setcounter{tocdepth}{1}
 {\sffamily \tableofcontents}
+\end{singlespace}
+
 \subfile{part_1}
 \subfile{part_2}
 \subfile{part_3}
